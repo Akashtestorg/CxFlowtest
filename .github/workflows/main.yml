@@ -43,7 +43,7 @@ jobs:
     # Provide Checkmarx URL
           checkmarx_url: https://cxprivatecloud.checkmarx.net
     # Select a Checkmarx Team
-          team: "CxServer"
+          team: CxServer
     # Provide Checkmarx Username
           checkmarx_username: akash.singh@checkmarx.com
     # Provide Checkmarx Password
