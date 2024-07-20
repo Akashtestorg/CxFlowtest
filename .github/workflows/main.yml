@@ -40,6 +40,8 @@ jobs:
             CHECKMARX_CLIENT_ID : "resource_owner_sast_client"
             CHECKMARX_SCOPE : "access_control_api sast_api"
       with:
+    # Select a Checkmarx Project
+          project: test_new_proj_2
     # Provide Checkmarx URL
           checkmarx_url: ${{ secrets.CHECKMARX_URL }}
     # Select a Checkmarx Team
@@ -50,8 +52,10 @@ jobs:
           checkmarx_password: ${{ secrets.CHECKMARX_PASSWORD }}
     # Provide Checkmarx Client Secret
           checkmarx_client_secret: ${{ secrets.CHECKMARX_CLIENT_SECRET }}
-    # Select a Checkmarx Project
-          project: test_new_proj
+          
+          github_token: ${{ github.token }}
+          scanners: sast
+          preset: ASA Premium
           extra_certificates: certificate
           params: --checkmarx.version=9.6 --logging.level.com.checkmarx.flow.service=DEBUG --namespace=${{ github.repository_owner }} --repo-name=${{ github.event.repository.name }} --branch=${{ github.ref }} --cx-flow.filter-severity --cx-flow.filter-category --checkmarx.disable-clubbing=true --repo-url=${{ github.event.repository.url }}           
     # Upload the Report for CodeQL/Security Alerts
