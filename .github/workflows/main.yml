@@ -41,19 +41,17 @@ jobs:
             CHECKMARX_SCOPE : "access_control_api sast_api"
       with:
     # Provide Checkmarx URL
-          checkmarx_url: https://cxprivatecloud.checkmarx.net
+          checkmarx_url: ${{ secrets.CHECKMARX_URL }}
     # Select a Checkmarx Team
           team: "CxServer/SP/APAC"
     # Provide Checkmarx Username
-          checkmarx_username: akash.singh@checkmarx.com
+          checkmarx_username: ${{ secrets.CHECKMARX_USERNAME }}
     # Provide Checkmarx Password
-          checkmarx_password: Cx12345678!
+          checkmarx_password: ${{ secrets.CHECKMARX_PASSWORD }}
     # Provide Checkmarx Client Secret
-          checkmarx_client_secret: 014DF517-39D1-4453-B7B3-9930C563627C
+          checkmarx_client_secret: ${{ secrets.CHECKMARX_CLIENT_SECRET }}
     # Select a Checkmarx Project
           project: test_new_proj
-    # Select an Application Name used by downstream bug tracker systems
-          app: APPSEC
           extra_certificates: certificate
           params: --checkmarx.version=9.6 --logging.level.com.checkmarx.flow.service=DEBUG --namespace=${{ github.repository_owner }} --repo-name=${{ github.event.repository.name }} --branch=${{ github.ref }} --cx-flow.filter-severity --cx-flow.filter-category --checkmarx.disable-clubbing=true --repo-url=${{ github.event.repository.url }}           
     # Upload the Report for CodeQL/Security Alerts
