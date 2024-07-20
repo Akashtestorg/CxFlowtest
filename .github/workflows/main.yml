@@ -37,20 +37,25 @@ jobs:
     - name: Checkmarx CxFlow Action
       uses: checkmarx-ts/checkmarx-cxflow-github-action@v1.9
       env:
-        CHECKMARX_CLIENT_ID : "resource_owner_sast_client"
-        CHECKMARX_SCOPE : "access_control_api sast_api"
+            CHECKMARX_CLIENT_ID : "resource_owner_sast_client"
+            CHECKMARX_SCOPE : "access_control_api sast_api"
       with:
-        project: 'CxFlow_test'
-        team: 'CxServer'
-        checkmarx_url: https://cxprivatecloud.checkmarx.net
-        checkmarx_username: Aakash.singh@checkmarx.com
-        checkmarx_password: Cx12345678!
-        checkmarx_client_secret: 014DF517-39D1-4453-B7B3-9930C563627C
-        github_token: ${{ github.token }}
-        scanners: sast
-        preset: ASA Premium
-        extra_certificates: certificate
-        params: --checkmarx.version=9.6 --logging.level.com.checkmarx.flow.service=DEBUG --namespace=${{ github.repository_owner }} --repo-name=${{ github.event.repository.name }} --branch=${{ github.ref }} --cx-flow.filter-severity --cx-flow.filter-category --checkmarx.disable-clubbing=true --repo-url=${{ github.event.repository.url }}           
+    # Provide Checkmarx URL
+          checkmarx_url: https://cxprivatecloud.checkmarx.net
+    # Select a Checkmarx Team
+          team: "CxServer"
+    # Provide Checkmarx Username
+          checkmarx_username: akash.singh@checkmarx.com
+    # Provide Checkmarx Password
+          checkmarx_password: Cx12345678!
+    # Provide Checkmarx Client Secret
+          checkmarx_client_secret: 014DF517-39D1-4453-B7B3-9930C563627C
+    # Select a Checkmarx Project
+          project: test_new_proj
+    # Select an Application Name used by downstream bug tracker systems
+          app: APPSEC
+          extra_certificates: certificate
+          params: --checkmarx.version=9.6 --logging.level.com.checkmarx.flow.service=DEBUG --namespace=${{ github.repository_owner }} --repo-name=${{ github.event.repository.name }} --branch=${{ github.ref }} --cx-flow.filter-severity --cx-flow.filter-category --checkmarx.disable-clubbing=true --repo-url=${{ github.event.repository.url }}           
     # Upload the Report for CodeQL/Security Alerts
     - name: Upload SARIF file
       uses: github/codeql-action/upload-sarif@v2
