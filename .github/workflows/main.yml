@@ -28,7 +28,7 @@ jobs:
     env:
       #checkmarx_url: ${{ secrets.CHECKMARX_URL }}
       # below client secret is not credential, it is required by checkmarx
-      #checkmarx_client_secret: 014DF517-39D1-4453-B7B3-9930C563627C
+      checkmarx_client_secret: 014DF517-39D1-4453-B7B3-9930C563627C
       checkmarx_team: CxServer/SP/APAC
       checkmarx_username: ${{ secrets.CHECKMARX_USERNAME }}
       checkmarx_password: ${{ secrets.CHECKMARX_PASSWORD }}
@@ -42,7 +42,7 @@ jobs:
           checkmarx_url: ${{ secrets.CHECKMARX_URL }}
           checkmarx_username: ${{ env.checkmarx_username }}
           checkmarx_password: ${{ env.checkmarx_password }}
-          checkmarx_client_secret: 014DF517-39D1-4453-B7B3-9930C563627C
+          checkmarx_client_secret: ${{ env.checkmarx_client_secret }}
           team: ${{ env.checkmarx_team }}
           project: ${{ github.event.repository.name }}
           app: app
