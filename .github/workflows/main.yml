@@ -32,7 +32,7 @@ jobs:
       #checkmarx_team: CxServer/SP/APAC
       #checkmarx_username: ${{ secrets.CHECKMARX_USERNAME }}
       #checkmarx_password: ${{ secrets.CHECKMARX_PASSWORD }}
-      #scanners: sast
+      scanners: sast
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -46,7 +46,7 @@ jobs:
           team: "CxServer/SP/APAC"
           project: ${{ github.event.repository.name }}
           app: app
-          scanners: sast
+          scanners: ${{ env.scanners }}
           github_token: ${{ github.token }}
           break_build: true
           incremental: true
