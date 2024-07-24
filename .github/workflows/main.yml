@@ -1,65 +1,70 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-
-# This is a basic workflow to help you get started with Using Checkmarx CxFlow Action
-
-name: CxSAST
-
+name: Checkmarx scan common workflow
 on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel - this job is specifically configured to use the Checkmarx CxFlow Action
-permissions:
-  contents: read
+  workflow_dispatch:
+    inputs:
+      checkmarx_app:
+        required: true
+        type: string
+        description: Checkmarx App
+      break_build:
+        required: true
+        type: boolean
+        default: true
+  workflow_call:
+    inputs:
+      checkmarx_app:
+        required: true
+        type: string
+        description: Checkmarx App
+      break_build:
+        required: true
+        type: boolean
+        default: true
+    # secrets:
+    #   SVC_DBSCN_AUTO_PASSWORD:
+    #     required: true
 
 jobs:
-  # This workflow contains a single job called "scan"
-  scan:
-    # The type of runner that the job will run on - Ubuntu is required as Docker is leveraged for the action
+  checkmarx-scan:
     permissions:
-      contents: read # for actions/checkout to fetch code
-      issues: write # for checkmarx-ts/checkmarx-cxflow-github-action to write feedback to github issues
-      pull-requests: write # for checkmarx-ts/checkmarx-cxflow-github-action to write feedback to PR
-      security-events: write # for github/codeql-action/upload-sarif to upload SARIF results
-      actions: read # only required for a private repository by github/codeql-action/upload-sarif to get the Action run status
-    runs-on: ubuntu-latest
-
-    # Steps require - checkout code, run CxFlow Action, Upload SARIF report (optional)
+      id-token: write # This is required for requesting the JWT for AWS role assumption
+      contents: read  # This is required for actions/checkout
+    runs-on:
+      group: ubuntu-latest
+    env:
+      checkmarx_url: ${{ secrets.CHECKMARX_URL }}
+      # below client secret is not credential, it is required by checkmarx
+      checkmarx_client_secret: 014DF517-39D1-4453-B7B3-9930C563627C
+      checkmarx_team: CxServer/SP/APAC
+      checkmarx_username: ${{ secrets.CHECKMARX_USERNAME }}
+      checkmarx_password: ${{ secrets.CHECKMARX_PASSWORD }}
+      scanners: sast
     steps:
-    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-    - uses: actions/checkout@v4
-    # Runs the Checkmarx Scan leveraging the latest version of CxFlow - REFER to Action README for list of inputs
-    - name: Checkmarx CxFlow Action
-      uses: checkmarx-ts/checkmarx-cxflow-github-action@v1.9
-      env:
-            CHECKMARX_CLIENT_ID : "resource_owner_sast_client"
-            CHECKMARX_SCOPE : "access_control_api sast_api"
-      with:
-    # Select a Checkmarx Project
-          project: test_new_proj_2
-    # Provide Checkmarx URL
-          checkmarx_url: ${{ secrets.CHECKMARX_URL }}
-    # Select a Checkmarx Team
-          team: "CxServer/SP/APAC"
-    # Provide Checkmarx Username
-          checkmarx_username: ${{ secrets.CHECKMARX_USERNAME }}
-    # Provide Checkmarx Password
-          checkmarx_password: ${{ secrets.CHECKMARX_PASSWORD }}
-    # Provide Checkmarx Client Secret
-          checkmarx_client_secret: ${{ secrets.CHECKMARX_CLIENT_SECRET }}
-          
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Checkmarx CxFlow Action
+        uses: checkmarx-ts/checkmarx-cxflow-github-action@v1.9
+        with:
+          checkmarx_url: ${{ env.checkmarx_url }}
+          checkmarx_username: ${{ env.checkmarx_username }}
+          checkmarx_password: ${{ env.checkmarx_password }}
+          checkmarx_client_secret: ${{ env.checkmarx_client_secret }}
+          team: ${{ env.checkmarx_team }}
+          project: ${{ github.event.repository.name }}
+          app: ${{ inputs.checkmarx_app }}
+          scanners: ${{ env.scanners }}
           github_token: ${{ github.token }}
-          scanners: sast
-          preset: ASA Premium
-          extra_certificates: certificate
-          params: --checkmarx.version=9.6 --logging.level.com.checkmarx.flow.service=DEBUG --namespace=${{ github.repository_owner }} --repo-name=${{ github.event.repository.name }} --branch=${{ github.ref }} --cx-flow.filter-severity --cx-flow.filter-category --checkmarx.disable-clubbing=true --repo-url=${{ github.event.repository.url }}           
-    # Upload the Report for CodeQL/Security Alerts
-    - name: Upload SARIF file
-      uses: github/codeql-action/upload-sarif@v2
-      with:
-        sarif_file: cx.sarif
+          break_build: ${{ inputs.break_build }}
+          incremental: true
+          params: |
+            --namespace=${{ github.repository_owner }} \
+            --repo-name=${{ github.event.repository.name }} \
+            --branch=${{ github.head_ref || github.ref_name }} \
+            # --logging.level.com.checkmarx.flow.utils.ZipUtils=DEBUG \
+            --cx-flow.scan-resubmit=false \
+            --cx-flow.thresholds.high=0 \
+            --cx-flow.thresholds.medium=10 \
+            --cx-flow.thresholds.low=25 \
+            --cx-flow.filterSeverity \
+            --cx-flow.filterCategory \
+            --cx-flow.zip-exclude=\.git/.*,\.github/.*,k8s/.*,tests/.*,Jenkinsfile,Dockerfile,test/.*,lib/.*,swagger/.*,docs/.*,node_modules/.*,react/.*,plugins/.*,scripts/.*,build/.*,target/.*,\.idea/.*,\.gradle/.*,gradle/.*,androidTest/.*,\.vscode/.*,mock*,Mock*,maven/.*,\.mvn/.*,\.m2/.*,venv/.*,e2e/.*,samples/.*,packages/.*,\.nuget/.*,vendor/.*,\.settings/.*,__MACOSX/.*,__pycache__/.*,\.pytest_cache/.*,coverage/.*,\.scannerwork/.*,img/.*
