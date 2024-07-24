@@ -24,8 +24,7 @@ jobs:
     permissions:
       id-token: write # This is required for requesting the JWT for AWS role assumption
       contents: read  # This is required for actions/checkout
-    runs-on:
-      group: ubuntu-latest
+    runs-on: ubuntu-latest
     env:
       checkmarx_url: ${{ secrets.CHECKMARX_URL }}
       # below client secret is not credential, it is required by checkmarx
