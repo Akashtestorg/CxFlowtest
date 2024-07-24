@@ -61,4 +61,5 @@ jobs:
             --cx-flow.thresholds.low=25 \
             --cx-flow.filterSeverity \
             --cx-flow.filterCategory \
-            --cx-flow.zip-exclude=\.git/.*,\.github/.*,k8s/.*,tests/.*,Jenkinsfile,Dockerfile,test/.*,lib/.*,swagger/.*,docs/.*,node_modules/.*,react/.*,plugins/.*,scripts/.*,build/.*,target/.*,\.idea/.*,\.gradle/.*,gradle/.*,androidTest/.*,\.vscode/.*,mock*,Mock*,maven/.*,\.mvn/.*,\.m2/.*,venv/.*,e2e/.*,samples/.*,packages/.*,\.nuget/.*,vendor/.*,\.settings/.*,__MACOSX/.*,__pycache__/.*,\.pytest_cache/.*,coverage/.*,\.scannerwork/.*,img/.*
+            --cx-flow.zip-exclude=\.git/.*,\.github/.*,k8s/.*,tests/.*,Jenkinsfile,Dockerfile,test/.*,lib/.*,swagger/.*,docs/.*,node_modules/.*,react/.*,plugins/.*,scripts/.*,build/.*,target/.*,\.idea/.*,\.gradle/.*,gradle/.*,androidTest/.*,\.vscode/.*,mock*,Mock*,maven/.*,\.mvn/.*,\.m2/.*,venv/.*,e2e/.*,samples/.*,packages/.*,\.nuget/.*,vendor/.*,\.settings/.*,__MACOSX/.*,__pycache__/.*,\.pytest_cache/.*,coverage/.*,\.scannerwork/.*,img/.*  \
+            --logging.level.org.springframework.web.client.RestTemplate=TRACE --logging.level.com.checkmarx.flow.service=DEBUG --logging.level.org.apache.http.wire=TRACE
