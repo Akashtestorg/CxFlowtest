@@ -1,15 +1,10 @@
-name: Checkmarx scan common workflow
+name: CxSAST
 on:
-  workflow_dispatch:
-    inputs:
-      checkmarx_app:
-        required: true
-        type: string
-        description: Checkmarx App
-      break_build:
-        required: true
-        type: boolean
-        default: true
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+   
   workflow_call:
     inputs:
       checkmarx_app:
@@ -51,10 +46,10 @@ jobs:
           checkmarx_client_secret: ${{ env.checkmarx_client_secret }}
           team: ${{ env.checkmarx_team }}
           project: ${{ github.event.repository.name }}
-          app: ${{ inputs.checkmarx_app }}
+          app: app
           scanners: ${{ env.scanners }}
           github_token: ${{ github.token }}
-          break_build: ${{ inputs.break_build }}
+          break_build: true
           incremental: true
           params: |
             --namespace=${{ github.repository_owner }} \
