@@ -26,27 +26,27 @@ jobs:
       contents: read  # This is required for actions/checkout
     runs-on: ubuntu-latest
     env:
-      checkmarx_url: ${{ secrets.CHECKMARX_URL }}
+      #checkmarx_url: ${{ secrets.CHECKMARX_URL }}
       # below client secret is not credential, it is required by checkmarx
-      checkmarx_client_secret: 014DF517-39D1-4453-B7B3-9930C563627C
+      #checkmarx_client_secret: 014DF517-39D1-4453-B7B3-9930C563627C
       #checkmarx_team: CxServer/SP/APAC
-      checkmarx_username: ${{ secrets.CHECKMARX_USERNAME }}
-      checkmarx_password: ${{ secrets.CHECKMARX_PASSWORD }}
-      scanners: sast
+      #checkmarx_username: ${{ secrets.CHECKMARX_USERNAME }}
+      #checkmarx_password: ${{ secrets.CHECKMARX_PASSWORD }}
+      #scanners: sast
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Checkmarx CxFlow Action
         uses: checkmarx-ts/checkmarx-cxflow-github-action@v1.9
         with:
-          checkmarx_url: ${{ env.checkmarx_url }}
-          checkmarx_username: ${{ env.checkmarx_username }}
-          checkmarx_password: ${{ env.checkmarx_password }}
-          checkmarx_client_secret: ${{ env.checkmarx_client_secret }}
+          checkmarx_url: ${{ secrets.CHECKMARX_URL }}
+          checkmarx_username: ${{ secrets.CHECKMARX_USERNAME }}
+          checkmarx_password: ${{ secrets.CHECKMARX_PASSWORD }}
+          checkmarx_client_secret: 014DF517-39D1-4453-B7B3-9930C563627C
           team: "CxServer/SP/APAC"
           project: ${{ github.event.repository.name }}
           app: app
-          scanners: ${{ env.scanners }}
+          scanners: sast
           github_token: ${{ github.token }}
           break_build: true
           incremental: true
