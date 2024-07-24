@@ -26,7 +26,7 @@ jobs:
       contents: read  # This is required for actions/checkout
     runs-on: ubuntu-latest
     env:
-      #checkmarx_url: https://cxprivatecloud.checkmarx.net/
+      checkmarx_url: https://cxprivatecloud.checkmarx.net
       # below client secret is not credential, it is required by checkmarx
       checkmarx_client_secret: 014DF517-39D1-4453-B7B3-9930C563627C
       checkmarx_team: CxServer/SP/APAC
@@ -39,7 +39,7 @@ jobs:
       - name: Checkmarx CxFlow Action
         uses: checkmarx-ts/checkmarx-cxflow-github-action@v1.9
         with:
-          checkmarx_url: https://cxprivatecloud.checkmarx.net
+          checkmarx_url: ${{ env.checkmarx_url}}
           checkmarx_username: ${{ env.checkmarx_username }}
           checkmarx_password: ${{ env.checkmarx_password }}
           checkmarx_client_secret: ${{ env.checkmarx_client_secret }}
