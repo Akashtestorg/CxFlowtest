@@ -30,8 +30,8 @@ jobs:
       # below client secret is not credential, it is required by checkmarx
       #checkmarx_client_secret: 014DF517-39D1-4453-B7B3-9930C563627C
       #checkmarx_team: CxServer/SP/APAC
-      #checkmarx_username: ${{ secrets.CHECKMARX_USERNAME }}
-      #checkmarx_password: ${{ secrets.CHECKMARX_PASSWORD }}
+      checkmarx_username: ${{ secrets.CHECKMARX_USERNAME }}
+      checkmarx_password: ${{ secrets.CHECKMARX_PASSWORD }}
       scanners: sast
     steps:
       - name: Checkout code
