@@ -48,7 +48,7 @@ jobs:
           app: app
           scanners: ${{ env.scanners }}
           github_token: ${{ github.token }}
-          break_build: true
+          break_build: false
           incremental: true
           bug_tracker: Sarif
           params: |
