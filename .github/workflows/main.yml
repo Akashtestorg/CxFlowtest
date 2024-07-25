@@ -39,7 +39,7 @@ jobs:
       - name: Checkmarx CxFlow Action
         uses: checkmarx-ts/checkmarx-cxflow-github-action@v1.9
         with:
-          checkmarx_base_url: https://cxprivatecloud.checkmarx.net
+          checkmarx_url: https://cxprivatecloud.checkmarx.net
           checkmarx_username: ${{ env.checkmarx_username }}
           checkmarx_password: ${{ env.checkmarx_password }}
           checkmarx_client_secret: ${{ env.checkmarx_client_secret }}
