@@ -50,15 +50,13 @@ jobs:
           github_token: ${{ github.token }}
           break_build: true
           incremental: true
+          bug_tracker: Sarif
           params: |
             --namespace=${{ github.repository_owner }} \
             --repo-name=${{ github.event.repository.name }} \
             --branch=${{ github.head_ref || github.ref_name }} \
             # --logging.level.com.checkmarx.flow.utils.ZipUtils=DEBUG \
             --cx-flow.scan-resubmit=false \
-            --cx-flow.thresholds.high=0 \
-            --cx-flow.thresholds.medium=10 \
-            --cx-flow.thresholds.low=25 \
             --cx-flow.filterSeverity \
             --cx-flow.filterCategory \
             --cx-flow.zip-exclude=\.git/.*,\.github/.*,k8s/.*,tests/.*,Jenkinsfile,Dockerfile,test/.*,lib/.*,swagger/.*,docs/.*,node_modules/.*,react/.*,plugins/.*,scripts/.*,build/.*,target/.*,\.idea/.*,\.gradle/.*,gradle/.*,androidTest/.*,\.vscode/.*,mock*,Mock*,maven/.*,\.mvn/.*,\.m2/.*,venv/.*,e2e/.*,samples/.*,packages/.*,\.nuget/.*,vendor/.*,\.settings/.*,__MACOSX/.*,__pycache__/.*,\.pytest_cache/.*,coverage/.*,\.scannerwork/.*,img/.*  \
