@@ -23,7 +23,8 @@ jobs:
   checkmarx-scan:
     permissions:
       id-token: write # This is required for requesting the JWT for AWS role assumption
-      contents: read  # This is required for actions/checkout
+      contents: write
+      security-events: write
     runs-on: ubuntu-latest
     env:
       #checkmarx_url: https://cxprivatecloud.checkmarx.net
@@ -61,15 +62,10 @@ jobs:
             --cx-flow.filterCategory \
             --cx-flow.zip-exclude=\.git/.*,\.github/.*,k8s/.*,tests/.*,Jenkinsfile,Dockerfile,test/.*,lib/.*,swagger/.*,docs/.*,node_modules/.*,react/.*,plugins/.*,scripts/.*,build/.*,target/.*,\.idea/.*,\.gradle/.*,gradle/.*,androidTest/.*,\.vscode/.*,mock*,Mock*,maven/.*,\.mvn/.*,\.m2/.*,venv/.*,e2e/.*,samples/.*,packages/.*,\.nuget/.*,vendor/.*,\.settings/.*,__MACOSX/.*,__pycache__/.*,\.pytest_cache/.*,coverage/.*,\.scannerwork/.*,img/.*  \
             --logging.level.org.springframework.web.client.RestTemplate=TRACE --logging.level.com.checkmarx.flow.service=DEBUG --logging.level.org.apache.http.wire=TRACE
-            
-
-  upload-sarif:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      security-events: write
-    steps:
+      
       - name: Upload SARIF file
-        uses: github/codeql-action/upload-sarif@v2
+        uses: github/codeql-action/upload-sarif@v3
         with:
-          sarif_file: cx.sarif
+          sarif_file: cx.sarif      
+
+  
