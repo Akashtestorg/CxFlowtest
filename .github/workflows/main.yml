@@ -27,4 +27,4 @@ jobs:
           incremental: true
           github_token: ${{ secrets.GITHUB_TOKEN }}
           project: 'Basecone-Backend-Core'
-          params: --cx-flow.zip-exclude=\.git/.*,\.github/.*,src/Infrastructure.Data.Master/Migrations/.* #no single quotes required
+          params: --checkmarx.version=9.0 --cx-flow.zip-exclude=\.git/.*,\.github/.*,src/Infrastructure.Data.Master/Migrations/.* #no single quotes required
