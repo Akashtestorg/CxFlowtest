@@ -1,72 +1,30 @@
-name: CxSAST
+name: SAST
+
 on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-   
-  workflow_call:
-    inputs:
-      checkmarx_app:
-        required: true
-        type: string
-        description: Checkmarx App
-      break_build:
-        required: true
-        type: boolean
-        default: true
-    # secrets:
-    #   SVC_DBSCN_AUTO_PASSWORD:
-    #     required: true
+  # Trigger the workflow manually
+  workflow_dispatch:
+  
+  schedule: 
+  - cron: "0 23 * * 5"
 
 jobs:
-  checkmarx-scan:
-    permissions:
-      id-token: write # This is required for requesting the JWT for AWS role assumption
-      contents: write
-      security-events: write
+  checkmarx:
+    name: checkmarx
     runs-on: ubuntu-latest
-    env:
-      #checkmarx_url: https://cxprivatecloud.checkmarx.net
-      # below client secret is not credential, it is required by checkmarx
-      checkmarx_client_secret: 014DF517-39D1-4453-B7B3-9930C563627C
-      checkmarx_team: CxServer/SP/APAC
-      checkmarx_username: ${{ secrets.CHECKMARX_USERNAME }}
-      checkmarx_password: ${{ secrets.CHECKMARX_PASSWORD }}
-      scanners: sast
+
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4 # updated checkout to v4
+
       - name: Checkmarx CxFlow Action
         uses: checkmarx-ts/checkmarx-cxflow-github-action@v1.9
         with:
           checkmarx_url: https://cxprivatecloud.checkmarx.net
-          checkmarx_username: ${{ env.checkmarx_username }}
-          checkmarx_password: ${{ env.checkmarx_password }}
-          checkmarx_client_secret: ${{ env.checkmarx_client_secret }}
-          team: ${{ env.checkmarx_team }}
-          project: ${{ github.event.repository.name }}
-          app: app
-          scanners: ${{ env.scanners }}
-          github_token: ${{ github.token }}
-          break_build: false
+          checkmarx_username: ${{ secrets.CHECKMARX_USERNAME }}
+          checkmarx_password: ${{ secrets.CHECKMARX_PASSWORD }}
+          checkmarx_client_secret: 014DF517-39D1-4453-B7B3-9930C563627C
+          team: CxServer/SP/APAC # Their team format is wrong
           incremental: true
-          bug_tracker: Sarif
-          params: |
-            --namespace=${{ github.repository_owner }} \
-            --repo-name=${{ github.event.repository.name }} \
-            --branch=${{ github.head_ref || github.ref_name }} \
-            # --logging.level.com.checkmarx.flow.utils.ZipUtils=DEBUG \
-            --cx-flow.scan-resubmit=false \
-            --cx-flow.filterSeverity \
-            --cx-flow.filterCategory \
-            --cx-flow.zip-exclude=\.git/.*,\.github/.*,k8s/.*,tests/.*,Jenkinsfile,Dockerfile,test/.*,lib/.*,swagger/.*,docs/.*,node_modules/.*,react/.*,plugins/.*,scripts/.*,build/.*,target/.*,\.idea/.*,\.gradle/.*,gradle/.*,androidTest/.*,\.vscode/.*,mock*,Mock*,maven/.*,\.mvn/.*,\.m2/.*,venv/.*,e2e/.*,samples/.*,packages/.*,\.nuget/.*,vendor/.*,\.settings/.*,__MACOSX/.*,__pycache__/.*,\.pytest_cache/.*,coverage/.*,\.scannerwork/.*,img/.*  \
-            --logging.level.org.springframework.web.client.RestTemplate=TRACE --logging.level.com.checkmarx.flow.service=DEBUG --logging.level.org.apache.http.wire=TRACE
-      
-      - name: Upload SARIF file
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: cx.sarif
-          token: ${{ secrets.GITHUB_TOKEN }}     
-
-  
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          project: 'Basecone-Backend-Core'
+          params: --cx-flow.zip-exclude=\.git/.*,\.github/.*,src/Infrastructure.Data.Master/Migrations/.* #no single quotes required
